@@ -1,7 +1,7 @@
 <template>
   <div class="mask-container">
     <div
-      class="mask-box relative w-full h-[400px] sm:h-[460px] lg:h-[620px] overflow-hidden"
+      class="mask-box relative w-full h-[350px] sm:h-[520px] overflow-hidden"
     >
       <!-- Background Image -->
       <div class="absolute inset-0">
