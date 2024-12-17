@@ -14,7 +14,7 @@
 
       <!-- Content Overlay -->
       <div
-        class="relative z-10 flex flex-col justify-center items-center h-full text-center px-4 sm:px-6 lg:px-8 mt-12 sm:mt-20"
+        class="relative z-10 flex flex-col justify-center items-center h-full text-center px-4 sm:px-6 lg:px-8 mt-12 sm:mt-20 font-asap"
       >
         <h1 class="text-4xl md:text-6xl font-bold text-white">Donaciones</h1>
         <p class="text-[#fcd299] text-xl max-w-3xl mt-6">
@@ -27,7 +27,7 @@
 
   <div class="below-mask-box">
     <div class="box-wrap">
-      <div class="max-w-7xl mx-auto px-1 lg:py-16 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto px-1 lg:py-16 sm:px-6 lg:px-8 font-asap">
         <!-- Bible Verse -->
         <div class="text-center mb-8">
           <p class="text-[#6e2b62] text-xl italic mb-2 md:mt-32 sm:mt-12 mt-12">
@@ -68,16 +68,6 @@
               <span class="material-icons">account_balance</span>
               <span>Consignaciones</span>
             </button>
-          </div>
-
-          <!-- Main CTA -->
-          <div class="text-center">
-            <a
-              href="#"
-              class="inline-block bg-[#a50034] text-white py-4 px-8 rounded-lg hover:bg-opacity-90 transition-all text-lg font-semibold"
-            >
-              Haz clic aquí para hacer tu contribución en línea
-            </a>
           </div>
         </div>
 
@@ -123,7 +113,7 @@
 .mask-container {
   container-type: inline-size;
   --mask-head-size: calc(0.087 * 100cqw);
-  --mask-foot-size: calc(0.126 * 100cqw);
+  --mask-foot-size: calc(0.055 * 100cqw);
 }
 .mask-box {
   margin-block: calc(-1 * var(--mask-head-size) - 1px)
@@ -137,11 +127,12 @@
       black calc(100% - var(--mask-foot-size) + 1px),
       transparent calc(100% - var(--mask-foot-size) + 1px)
     ),
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none" width="1000" height="126"><g transform="scale(2.1,1)" transform-origin="44% 50%"><path d="M500 80.7C358 68 0 4 0 4V0h1000v84.7c-216 23.3-358 8.6-500-4Z" opacity=".3"></path><path d="M500 65.7C358 53 0 4 0 4V0h1000v62.7c-216 23.3-358 15.6-500 3Z" opacity=".5"></path><path d="M500 50.7C358 38 0 4 0 4V0h1000v40.7C784 64 642 63.3 500 50.7Z"></path></g></svg>');
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none" width="1000" height="55"><g transform="scale(1.3,1)" transform-origin="0% 50%"><path d="M1000 100C500 100 500 64 0 64V0h1000v100Z" opacity=".5"></path><path d="M1000 100C500 100 500 34 0 34V0h1000v100Z" opacity=".5"></path><path d="M1000 100C500 100 500 4 0 4V0h1000v100Z"></path></g></svg>');
   mask-repeat: no-repeat;
   mask-position: top, center, bottom;
   mask-size: 100%;
   background-color: #001e62;
+  background-image: linear-gradient(90deg, #001e62, #6e2b62);
 }
 .above-mask-box {
   padding-bottom: var(--mask-head-size);
@@ -151,7 +142,6 @@
 .below-mask-box {
   padding-top: var(--mask-foot-size);
   display: block;
-  background: rgb(255, 255, 255);
 }
 .box-wrap {
   padding: 30px;
