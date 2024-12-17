@@ -84,6 +84,14 @@
         <a href="/preguntas" class="text-white hover:text-amarillo"
           >Preguntas frecuentes</a
         >
+        <div class="mt-8 md:mt-0">
+          <a
+            href="/donaciones"
+            class="block text-center bg-amarillo text-azul py-2 px-4 rounded-lg font-semibold hover:bg-white hover:text-azul transition-colors"
+          >
+            Donaciones
+          </a>
+        </div>
       </div>
 
       <!-- Botón de hamburguesa para móviles -->
@@ -158,6 +166,14 @@
           </template>
         </li>
       </ul>
+      <div class="mt-8">
+        <a
+          href="/donaciones"
+          class="block text-center bg-amarillo text-azul py-2 px-4 rounded-lg font-semibold hover:bg-white hover:text-azul transition-colors"
+        >
+          Donar
+        </a>
+      </div>
     </div>
   </div>
 
