@@ -1,51 +1,38 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import Layout from "../layouts/Layout.astro";
 import Principal from "../components/Principal.vue";
-import YoutubeVideos from "../components/YoutubeVideos.vue";
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Gracia en abundancia</title>
-    <ViewTransitions />
-  </head>
-  <body class="dark:bg-gray-800">
-    <Principal client:load />
-    <!-- <YoutubeVideos client:load /> -->
+<Layout titulo="Gracia en abundancia">
+  <Principal client:load />
+</Layout>
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Función de desplazamiento suave con offset
+    function smoothScrollWithOffset(targetId) {
+      const targetElement = document.getElementById(targetId);
+      const navbar = document.querySelector("nav");
+      const navbarHeight = navbar ? navbar.offsetHeight : 80; // Altura del menú o valor por defecto
 
-    <script is:inline>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Función de desplazamiento suave con offset
-        function smoothScrollWithOffset(targetId) {
-          const targetElement = document.getElementById(targetId);
-          const navbar = document.querySelector("nav");
-          const navbarHeight = navbar ? navbar.offsetHeight : 80; // Altura del menú o valor por defecto
+      if (targetElement) {
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition =
+          window.pageYOffset + elementPosition - navbarHeight;
 
-          if (targetElement) {
-            const elementPosition = targetElement.getBoundingClientRect().top;
-            const offsetPosition =
-              window.pageYOffset + elementPosition - navbarHeight;
-
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: "smooth",
-            });
-          }
-        }
-
-        // Agregar manejador de eventos a todos los enlaces internos
-        document.querySelectorAll('a[href^="/#"]').forEach((anchor) => {
-          anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute("href").substring(2);
-            smoothScrollWithOffset(targetId);
-          });
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
         });
+      }
+    }
+
+    // Agregar manejador de eventos a todos los enlaces internos
+    document.querySelectorAll('a[href^="/#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute("href").substring(2);
+        smoothScrollWithOffset(targetId);
       });
-    </script>
-  </body>
-</html>
+    });
+  });
+</script>
