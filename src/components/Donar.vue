@@ -6,7 +6,7 @@
       <!-- Background Image -->
       <div class="absolute inset-0">
         <img
-          src="/bienvenida.jpg"
+          src="https://i.ibb.co/wCrdhqb/donaciones.jpg"
           alt="Worship background"
           class="w-full h-full object-cover opacity-40"
         />
@@ -42,10 +42,9 @@
           <p class="text-[#001e62] text-lg mb-8">
             ¡Gracias por hacer parte del crecimiento del Reino de Dios! Para
             poder realizar tu donación primero selecciona el medio que se ajuste
-            más, luego continúa con los pasos indicados; te invitamos a revisar
-            nuestra política de privacidad al final de la página, en el menú
-            "Enlaces de interés". Recuerda que la información que proporciones
-            es confidencial y no será compartida con terceros.
+            más, luego continúa con los pasos indicados. Recuerda que la
+            información que proporciones es confidencial y no será compartida
+            con terceros.
           </p>
 
           <!-- Payment Options -->
