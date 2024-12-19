@@ -84,6 +84,39 @@
         <a href="/preguntas" class="text-white hover:text-amarillo"
           >Preguntas frecuentes</a
         >
+        <div v-if="isLoggedIn" class="relative">
+          <button
+            class="flex items-center justify-between w-full py-2 px-3 font-medium text-white border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0"
+            @click.stop="toggleAdminMenu"
+          >
+            Administración
+            <img
+              src="/menu/chevron-down.svg"
+              class="w-4 h-4 ms-3 transition-transform duration-200"
+              :class="{ 'rotate-180': isAdminMenuOpen }"
+              alt="Chevron down"
+            />
+          </button>
+          <div
+            v-if="isAdminMenuOpen"
+            class="absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+          >
+            <ul class="py-2 text-sm text-gray-700">
+              <li>
+                <a href="/cambiopass" class="block px-4 py-2 hover:bg-gray-100"
+                  >Cambio de Contraseña</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/admin/eventos"
+                  class="block px-4 py-2 hover:bg-gray-100"
+                  >Administración de Eventos</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
         <div class="mt-8 md:mt-0">
           <a
             href="/donaciones"
@@ -165,6 +198,70 @@
             </a>
           </template>
         </li>
+        <li v-if="isLoggedIn">
+          <div
+            @click="toggleSubmenu(adminMenu)"
+            class="flex items-center justify-between py-2 px-4 text-white hover:bg-blue-800 rounded cursor-pointer"
+          >
+            <div class="flex items-center">
+              <img
+                src="/menu/admin.svg"
+                class="w-5 h-5 mr-2"
+                alt="Administración"
+              />
+              Administración
+            </div>
+            <img
+              src="/menu/chevron-down.svg"
+              :class="{ 'rotate-180': adminMenu.expanded }"
+              class="w-5 h-5 transition-transform duration-200"
+              alt="Expand"
+            />
+          </div>
+          <ul v-show="adminMenu.expanded" class="ml-4 mt-2 space-y-2">
+            <li>
+              <a
+                href="/cambiopass"
+                @click="closeSidebarOnMobile"
+                class="flex items-center py-1 px-4 text-white hover:bg-blue-800 rounded"
+              >
+                <img
+                  src="/menu/password.svg"
+                  class="w-5 h-5 mr-2"
+                  alt="Cambio de Contraseña"
+                />
+                Cambio de Contraseña
+              </a>
+            </li>
+            <li>
+              <a
+                href="/admin/eventos"
+                @click="closeSidebarOnMobile"
+                class="flex items-center py-1 px-4 text-white hover:bg-blue-800 rounded"
+              >
+                <img
+                  src="/menu/events.svg"
+                  class="w-5 h-5 mr-2"
+                  alt="Administración de Eventos"
+                />
+                Administración de Eventos
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li v-if="isLoggedIn">
+          <a
+            @click="logout"
+            class="flex items-center py-2 px-4 text-white hover:bg-blue-800 rounded cursor-pointer"
+          >
+            <img
+              src="/menu/logout.svg"
+              class="w-5 h-5 mr-2"
+              alt="Cerrar sesión"
+            />
+            Cerrar sesión
+          </a>
+        </li>
       </ul>
       <div class="mt-8">
         <a
@@ -198,6 +295,8 @@ export default {
     return {
       sidebarVisible: false,
       isOpen: false,
+      isAdminMenuOpen: false,
+      isLoggedIn: false,
       menuItems: [
         {
           text: "Inicio",
@@ -252,10 +351,26 @@ export default {
           icon: "/menu/question.svg",
         },
       ],
+      adminMenu: {
+        expanded: false,
+        submenu: [
+          {
+            text: "Cambio de Contraseña",
+            href: "/cambiopass",
+            icon: "/menu/password.svg",
+          },
+          {
+            text: "Administración de Eventos",
+            href: "/admin/eventos",
+            icon: "/menu/events.svg",
+          },
+        ],
+      },
     };
   },
   mounted() {
     document.addEventListener("click", this.closeMenu);
+    this.checkLoginStatus();
   },
   beforeUnmount() {
     document.removeEventListener("click", this.closeMenu);
@@ -271,14 +386,28 @@ export default {
       event.stopPropagation();
       this.isOpen = !this.isOpen;
     },
+    toggleAdminMenu(event) {
+      event.stopPropagation();
+      this.isAdminMenuOpen = !this.isAdminMenuOpen;
+    },
     closeMenu() {
       this.isOpen = false;
+      this.isAdminMenuOpen = false;
     },
     closeSidebarOnMobile() {
       // Cierra el sidebar solo en modo móvil
       if (window.innerWidth < 768) {
         this.sidebarVisible = false;
       }
+    },
+    checkLoginStatus() {
+      const token = localStorage.getItem("token");
+      this.isLoggedIn = !!token;
+    },
+    logout() {
+      localStorage.removeItem("token");
+      this.isLoggedIn = false;
+      window.location.href = "/";
     },
   },
 };
