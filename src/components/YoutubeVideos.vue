@@ -84,6 +84,7 @@
               :src="videos[0].thumbnail"
               :alt="videos[0].title"
               class="w-full h-[193px] md:w-[690px] md:h-[390px] object-cover rounded-lg"
+              loading="lazy"
             />
             <div
               class="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white px-2 py-1 rounded-md text-sm"
@@ -161,14 +162,15 @@
       >
         <swiper-slide v-for="video in videos.slice(1)" :key="video.id">
           <div
-            class="bg-white rounded-lg border shadow-sm overflow-hidden mb-12 h-[300px] sm:h-[365px] xl:h-[400px] cursor-pointer relative"
+            class="bg-white overflow-hidden h-[325px] sm:h-[360px] cursor-pointer relative"
             @click="openVideo(video.id)"
           >
-            <div class="relative overflow-hidden">
+            <div class="relative overflow-hidden rounded-lg">
               <img
                 :src="video.thumbnail"
                 :alt="video.title"
                 class="w-full h-46 object-cover transition-transform duration-300 hover:scale-110"
+                loading="lazy"
               />
               <div
                 class="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white px-2 py-1 rounded-md text-sm"
@@ -289,6 +291,23 @@ function setCachedData(key, data) {
   }
 }
 
+// Función para convertir imagen a Base64
+async function imageToBase64(url) {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error("Error convirtiendo imagen:", error);
+    return null;
+  }
+}
+
 export default {
   components: {
     Swiper,
@@ -337,43 +356,38 @@ export default {
       }
     },
 
-    async fetchVideos(useCache = true) {
+    async fetchVideos() {
       const cacheKey = this.selectedPlaylist
         ? `videos_${this.selectedPlaylist}`
         : "videos_all";
 
-      if (useCache) {
-        const cachedData = getCachedData(cacheKey);
-        if (cachedData) {
-          this.videos = cachedData.data;
-          this.loading = false;
+      // Cargar desde caché
+      const cachedData = getCachedData(cacheKey);
+      if (cachedData?.data) {
+        this.videos = cachedData.data;
+        this.loading = false;
 
-          if (Date.now() - cachedData.timestamp < CACHE_DURATION) {
-            this.fetchVideos(false);
-            return;
-          }
+        if (Date.now() - cachedData.timestamp < CACHE_DURATION) {
+          return;
         }
       }
 
+      // 2. Hacer la petición a la API en segundo plano
       try {
-        this.loading = true;
-        this.error = null; // Reiniciar el estado de error
         let url;
         if (this.selectedPlaylist) {
           url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${this.selectedPlaylist}&key=${this.apiKey}&maxResults=7`;
         } else {
           url = `https://www.googleapis.com/youtube/v3/search?key=${this.apiKey}&channelId=${this.channelId}&part=snippet&type=video&order=date&maxResults=7`;
         }
+
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const searchData = await response.json();
-        if (searchData.error) {
-          throw new Error(searchData.error.message);
-        }
 
-        const videoIds = searchData.items
+        const data = await response.json();
+        const videoIds = data.items
           .map((item) =>
             this.selectedPlaylist
               ? item.snippet.resourceId.videoId
@@ -381,41 +395,52 @@ export default {
           )
           .join(",");
 
-        const contentDetailsResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/videos?key=${this.apiKey}&id=${videoIds}&part=contentDetails`
+        // Obtener duración de los videos
+        const durationResponse = await fetch(
+          `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${this.apiKey}`
         );
-        if (!contentDetailsResponse.ok) {
-          throw newError(
-            `HTTP error! status: ${contentDetailsResponse.status}`
-          );
-        }
-        const contentDetailsData = await contentDetailsResponse.json();
+        const durationData = await durationResponse.json();
 
-        this.videos = searchData.items.map((item, index) => {
-          const contentDetails =
-            contentDetailsData.items[index]?.contentDetails;
-          const durationInfo = contentDetails
-            ? this.formatDuration(contentDetails.duration)
-            : { formatted: "N/A", totalSeconds: 0 };
-          return {
-            id: this.selectedPlaylist
-              ? item.snippet.resourceId.videoId
-              : item.id.videoId,
-            title: item.snippet.title,
-            description: item.snippet.description,
-            thumbnail: item.snippet.thumbnails.high.url,
-            author: item.snippet.channelTitle,
-            date: new Date(item.snippet.publishedAt).toLocaleDateString(),
-            duration: durationInfo.formatted,
-            isShort: durationInfo.totalSeconds < 120,
-          };
-        });
+        // Procesar videos y cachear miniaturas
+        const processedVideos = await Promise.all(
+          data.items.map(async (item) => {
+            const durationInfo = this.formatDuration(
+              durationData.items.find(
+                (v) =>
+                  v.id ===
+                  (this.selectedPlaylist
+                    ? item.snippet.resourceId.videoId
+                    : item.id.videoId)
+              )?.contentDetails?.duration
+            );
 
-        setCachedData(cacheKey, this.videos);
-      } catch (err) {
-        console.error("Error fetching videos:", err);
-        this.error = `Error al obtener los datos: ${err.message}`;
-        this.videos = []; // Limpiar videos en caso de error
+            // Convertir thumbnail a Base64
+            const thumbnailBase64 = await imageToBase64(
+              item.snippet.thumbnails.high.url
+            );
+
+            return {
+              id: this.selectedPlaylist
+                ? item.snippet.resourceId.videoId
+                : item.id.videoId,
+              title: item.snippet.title,
+              description: item.snippet.description,
+              thumbnail: thumbnailBase64 || item.snippet.thumbnails.high.url,
+              thumbnailUrl: item.snippet.thumbnails.high.url,
+              author: item.snippet.channelTitle,
+              date: new Date(item.snippet.publishedAt).toLocaleDateString(),
+              duration: durationInfo.formatted,
+              isShort: durationInfo.totalSeconds < 120,
+            };
+          })
+        );
+
+        // Actualizar caché y estado
+        setCachedData(cacheKey, processedVideos);
+        this.videos = processedVideos;
+      } catch (error) {
+        console.error("Error:", error);
+        this.error = `Error al cargar videos: ${error.message}`;
       } finally {
         this.loading = false;
       }
