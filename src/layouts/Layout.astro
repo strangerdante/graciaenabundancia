@@ -3,7 +3,6 @@ import { ViewTransitions } from "astro:transitions";
 import MenuInicio from "../components/MenuInicio.vue";
 import "@fontsource-variable/montserrat";
 import "@fontsource-variable/asap";
-
 const { titulo } = Astro.props;
 ---
 
@@ -19,5 +18,6 @@ const { titulo } = Astro.props;
   <body class="dark:bg-gray-800">
     <MenuInicio client:load />
     <slot />
+    <script is:inline></script>
   </body>
 </html>
