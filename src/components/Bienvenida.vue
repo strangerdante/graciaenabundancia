@@ -7,7 +7,8 @@
         class="absolute top-0 left-0 w-full h-full bg-cover bg-center"
         :style="{ backgroundImage: `url(${heroImage})` }"
       ></div>
-      <div class="absolute inset-0 bg-black opacity-30"></div>
+      <!-- Gradiente de derecha a izquierda, rojo a azul -->
+      <div class="absolute inset-0 bg-black/30"></div>
       <div class="relative h-full flex items-center justify-center z-10">
         <div class="text-center text-white p-5">
           <img
@@ -71,34 +72,31 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      heroImage: "https://i.ibb.co/f87nwPw/biblia2.jpg",
-    };
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeUnmount() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
-  methods: {
-    handleScroll() {
-      const parallaxBackground = this.$refs.parallaxBackground;
-      if (parallaxBackground) {
-        const scrollPosition = window.pageYOffset;
-        const limit = parallaxBackground.offsetHeight;
-        if (scrollPosition <= limit) {
-          parallaxBackground.style.transform = `translateY(${
-            scrollPosition * 0.5
-          }px)`;
-        }
-      }
-    },
-  },
+<script setup>
+import { ref, onMounted, onUnmounted } from "vue";
+
+const heroImage = ref("https://i.ibb.co/f87nwPw/biblia2.jpg");
+const parallaxBackground = ref(null);
+
+const handleScroll = () => {
+  if (parallaxBackground.value) {
+    const scrollPosition = window.pageYOffset;
+    const limit = parallaxBackground.value.offsetHeight;
+    if (scrollPosition <= limit) {
+      parallaxBackground.value.style.transform = `translateY(${
+        scrollPosition * 0.5
+      }px)`;
+    }
+  }
 };
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
 </script>
 
 <style scoped>

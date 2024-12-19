@@ -41,13 +41,26 @@ const handleUpdate = async (eventData) => {
 
   try {
     error.value = "";
-    await eventos.update(editingEvent.value.id, {
-      titulo: eventData.titulo,
-      descripcion: eventData.descripcion,
-      textoBoton: eventData.textoBoton,
-      linkBoton: eventData.linkBoton,
-      image: eventData.image,
-    });
+    const updatedData = {};
+
+    // Solo incluir campos que han sido cambiados
+    for (const key in eventData) {
+      if (
+        eventData[key] !== null &&
+        eventData[key] !== undefined &&
+        eventData[key] !== ""
+      ) {
+        updatedData[key] = eventData[key];
+      }
+    }
+
+    // Si no se cambiaron campos, no hacer la llamada a la API
+    if (Object.keys(updatedData).length === 0) {
+      error.value = "No se realizaron cambios";
+      return;
+    }
+
+    await eventos.update(editingEvent.value.id, updatedData);
     formMode.value = "closed";
     editingEvent.value = null;
     await loadEvents();
