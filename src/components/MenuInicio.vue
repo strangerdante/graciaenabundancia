@@ -46,28 +46,37 @@
               alt="Chevron down"
             />
           </button>
+
           <div
             v-if="isOpen"
-            class="absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+            class="absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 mt-2"
           >
             <ul class="py-2 text-sm text-gray-700">
               <li>
-                <a href="/#conocenos" class="block px-4 py-2 hover:bg-gray-100"
+                <a
+                  href="/#conocenos"
+                  class="block px-4 py-2 hover:bg-azul hover:text-white transition-colors duration-200"
                   >Pastor</a
                 >
               </li>
               <li>
-                <a href="/#pastor" class="block px-4 py-2 hover:bg-gray-100"
+                <a
+                  href="/#pastor"
+                  class="block px-4 py-2 hover:bg-azul hover:text-white transition-colors duration-200"
                   >Ministerios</a
                 >
               </li>
               <li>
-                <a href="/#ministerio" class="block px-4 py-2 hover:bg-gray-100"
+                <a
+                  href="/#ministerio"
+                  class="block px-4 py-2 hover:bg-azul hover:text-white transition-colors duration-200"
                   >Servicios</a
                 >
               </li>
               <li>
-                <a href="/#ministerio" class="block px-4 py-2 hover:bg-gray-100"
+                <a
+                  href="/#ministerio"
+                  class="block px-4 py-2 hover:bg-azul hover:text-white transition-colors duration-200"
                   >Galeria</a
                 >
               </li>
@@ -99,19 +108,28 @@
           </button>
           <div
             v-if="isAdminMenuOpen"
-            class="absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44"
+            class="absolute z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 mt-2"
           >
             <ul class="py-2 text-sm text-gray-700">
               <li>
-                <a href="/cambiopass" class="block px-4 py-2 hover:bg-gray-100"
+                <a
+                  href="/admin/eventos"
+                  class="block px-4 py-2 hover:bg-azul hover:text-white transition-colors duration-200"
+                  >Administración de anuncios</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/cambiopass"
+                  class="block px-4 py-2 hover:bg-azul hover:text-white transition-colors duration-200"
                   >Cambio de Contraseña</a
                 >
               </li>
               <li>
                 <a
-                  href="/admin/eventos"
-                  class="block px-4 py-2 hover:bg-gray-100"
-                  >Administración de Eventos</a
+                  @click="logout"
+                  class="block px-4 py-2 hover:bg-azul hover:text-white transition-colors duration-200 cursor-pointer"
+                  >Cerrar sesión</a
                 >
               </li>
             </ul>
@@ -132,7 +150,32 @@
         @click="toggleSidebar"
         class="md:hidden inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-gray-200"
       >
-        <img src="/menu/hamburger.svg" class="w-6 h-6" alt="Menu" />
+        <div class="relative w-6 h-6">
+          <transition name="hamburger-top">
+            <div
+              :class="[
+                'absolute w-6 h-0.5 bg-white transition-all duration-300',
+                sidebarVisible ? 'top-3 rotate-45' : 'top-1',
+              ]"
+            ></div>
+          </transition>
+          <transition name="hamburger-middle">
+            <div
+              :class="[
+                'absolute top-3 w-6 h-0.5 bg-white transition-all duration-300',
+                sidebarVisible ? 'opacity-0' : 'opacity-100',
+              ]"
+            ></div>
+          </transition>
+          <transition name="hamburger-bottom">
+            <div
+              :class="[
+                'absolute w-6 h-0.5 bg-white transition-all duration-300',
+                sidebarVisible ? 'top-3 -rotate-45' : 'top-5',
+              ]"
+            ></div>
+          </transition>
+        </div>
       </button>
     </div>
   </nav>
@@ -145,12 +188,10 @@
     ]"
   >
     <div class="p-5 font-asap">
-      <button
-        @click="toggleSidebar"
-        class="absolute top-4 right-4 text-white hover:text-yellow-400"
-      >
-        <img src="/menu/close.svg" class="w-6 h-6" alt="Close" />
-      </button>
+      <div class="relative flex items-center justify-center">
+        <h2 class="text-white text-xl font-semibold">Menu</h2>
+      </div>
+
       <ul class="space-y-4 mt-8">
         <!-- Menu items -->
         <li v-for="(item, index) in menuItems" :key="index">
@@ -221,20 +262,6 @@
           <ul v-show="adminMenu.expanded" class="ml-4 mt-2 space-y-2">
             <li>
               <a
-                href="/cambiopass"
-                @click="closeSidebarOnMobile"
-                class="flex items-center py-1 px-4 text-white hover:bg-blue-800 rounded"
-              >
-                <img
-                  src="/menu/password.svg"
-                  class="w-5 h-5 mr-2"
-                  alt="Cambio de Contraseña"
-                />
-                Cambio de Contraseña
-              </a>
-            </li>
-            <li>
-              <a
                 href="/admin/eventos"
                 @click="closeSidebarOnMobile"
                 class="flex items-center py-1 px-4 text-white hover:bg-blue-800 rounded"
@@ -245,6 +272,20 @@
                   alt="Administración de Eventos"
                 />
                 Administración de Eventos
+              </a>
+            </li>
+            <li>
+              <a
+                href="/cambiopass"
+                @click="closeSidebarOnMobile"
+                class="flex items-center py-1 px-4 text-white hover:bg-blue-800 rounded"
+              >
+                <img
+                  src="/menu/password.svg"
+                  class="w-5 h-5 mr-2"
+                  alt="Cambio de Contraseña"
+                />
+                Cambio de Contraseña
               </a>
             </li>
           </ul>
@@ -412,3 +453,24 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.hamburger-top-enter-active,
+.hamburger-top-leave-active,
+.hamburger-middle-enter-active,
+.hamburger-middle-leave-active,
+.hamburger-bottom-enter-active,
+.hamburger-bottom-leave-active {
+  transition: all 0.3s;
+}
+
+.hamburger-top-enter-from,
+.hamburger-top-leave-to,
+.hamburger-middle-enter-from,
+.hamburger-middle-leave-to,
+.hamburger-bottom-enter-from,
+.hamburger-bottom-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+</style>
