@@ -155,27 +155,29 @@ onMounted(() => {
         <div
           class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 w-full max-w-md mx-4 mt-auto mb-auto relative"
         >
-          <button
-            @click="closeForm"
-            class="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition duration-300"
-          >
-            <svg
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">
+              {{ formMode === "edit" ? "Editar Anuncio" : "Nuevo Anuncio" }}
+            </h3>
+            <button
+              @click="closeForm"
+              class="text-gray-600 hover:text-gray-800 transition duration-300"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-          <h3 class="text-lg font-semibold mb-4">
-            {{ formMode === "edit" ? "Editar Anuncio" : "Nuevo Anuncio" }}
-          </h3>
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
           <EventForm
             :event="editingEvent || {}"
             :isEdit="formMode === 'edit'"
