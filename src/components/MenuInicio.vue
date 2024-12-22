@@ -33,9 +33,9 @@
       <!-- Menú de navegación para pantallas grandes -->
       <div class="hidden md:flex items-center space-x-8 font-asap">
         <a href="/#inicio" class="text-white hover:text-amarillo">Inicio</a>
-        <div class="relative">
+        <div class="relative inline-block">
           <button
-            class="flex items-center justify-between w-full py-2 px-3 font-medium text-white border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0"
+            class="flex items-center justify-between py-2 px-3 font-medium text-white md:p-0 hover:text-amarillo"
             @click.stop="toggleMenu"
           >
             Conócenos
@@ -49,7 +49,8 @@
 
           <div
             v-if="isOpen"
-            class="absolute left-1/2 transform -translate-x-1/2 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 mt-2"
+            class="absolute left-1/2 transform -translate-x-1/2 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dropdown-menu"
+            style="top: calc(100% + 16px)"
           >
             <ul class="py-2 text-sm text-gray-700">
               <li>
@@ -93,9 +94,9 @@
         <a href="/preguntas" class="text-white hover:text-amarillo"
           >Preguntas frecuentes</a
         >
-        <div v-if="isLoggedIn" class="relative">
+        <div v-if="isLoggedIn" class="relative inline-block">
           <button
-            class="flex items-center justify-between w-full py-2 px-3 font-medium text-white border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0"
+            class="flex items-center justify-between py-2 px-3 font-medium text-white md:p-0 hover:text-amarillo"
             @click.stop="toggleAdminMenu"
           >
             Administración
@@ -108,7 +109,8 @@
           </button>
           <div
             v-if="isAdminMenuOpen"
-            class="absolute left-1/2 transform -translate-x-1/2 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 mt-2"
+            class="absolute left-1/2 transform -translate-x-1/2 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dropdown-menu"
+            style="top: calc(100% + 16px)"
           >
             <ul class="py-2 text-sm text-gray-700">
               <li>
@@ -436,7 +438,6 @@ export default {
       this.isAdminMenuOpen = false;
     },
     closeSidebarOnMobile() {
-      // Cierra el sidebar solo en modo móvil
       if (window.innerWidth < 768) {
         this.sidebarVisible = false;
       }
@@ -455,6 +456,22 @@ export default {
 </script>
 
 <style scoped>
+.dropdown-menu {
+  position: absolute;
+  min-width: 200px;
+}
+
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 10px 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}
+
 .hamburger-top-enter-active,
 .hamburger-top-leave-active,
 .hamburger-middle-enter-active,
