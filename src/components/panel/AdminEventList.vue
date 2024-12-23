@@ -204,7 +204,7 @@ onMounted(() => {
           {{ index + 1 }}
         </div>
         <div class="flex flex-col h-full">
-          <div v-if="evento.image" class="mb-4 relative">
+          <div v-if="evento.image" class="mb-2 relative">
             <img
               :src="evento.image"
               :alt="evento.titulo"
