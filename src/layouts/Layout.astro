@@ -14,6 +14,11 @@ const { titulo } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{titulo}</title>
     <ViewTransitions />
+    <style is:global>
+      html {
+        scroll-padding-top: 96px;
+      }
+    </style>
   </head>
   <body class="dark:bg-gray-800">
     <MenuInicio client:load />
