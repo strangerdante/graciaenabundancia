@@ -22,6 +22,7 @@
             Conozca más sobre nuestros valores y nuestra historia como iglesia
             visitando la página conocenos.
           </p>
+          <p>Hebreos 10:24-25</p>
           <a
             href="/#inicio"
             class="bg-rojo text-white hover:bg-rojo/80 px-6 py-2 rounded transition duration-300 ease-in-out transform hover:scale-105 inline-block"
@@ -107,7 +108,7 @@ const preguntas = ref([
   {
     pregunta: "1. Ejemplo",
     respuesta: "Ejemplo",
-    versiculos: ["versiculo", "versiculo", "versiculo"],
+    versiculos: ["Hebreos 10:24-25", "versiculo", "versiculo"],
     isOpen: false,
   },
   {

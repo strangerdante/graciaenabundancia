@@ -43,36 +43,5 @@ export default {
     BotonTop,
     RedesSociales,
   },
-  data() {
-    return {};
-  },
-  computed: {},
-  methods: {},
-  mounted() {
-    // RefTagger
-    window.refTagger = {
-      settings: {
-        bibleVersion: "RVR60",
-        tooltipStyle: "dark",
-        libronixBibleVersion: "DEFAULT",
-        addLogosLink: false,
-        appendIconToLibLinks: false,
-        libronixLinkIcon: "dark",
-        noSearchClassNames: ["commentList"],
-        useTooltip: true,
-        noSearchTagNames: ["h1", "h2", "h3"],
-        linksOpenNewWindow: true,
-        convertHyperlinks: false,
-        caseInsensitive: false,
-        tagChapters: true,
-      },
-    };
-
-    // Cargar RefTagger
-    const script = document.createElement("script");
-    script.src = "https://api.reftagger.com/v2/reftagger.es.js";
-    script.async = true;
-    document.body.appendChild(script);
-  },
 };
 </script>
