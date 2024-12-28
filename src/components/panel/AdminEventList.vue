@@ -146,49 +146,17 @@ onMounted(() => {
           </svg>
         </span>
       </div>
-
-      <!-- Modal -->
-      <div
-        v-if="formMode !== 'closed'"
-        class="fixed top-28 inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 overflow-y-auto py-4"
-      >
-        <div
-          class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 w-full max-w-md mx-4 mt-auto mb-auto relative"
-        >
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold">
-              {{ formMode === "edit" ? "Editar Anuncio" : "Nuevo Anuncio" }}
-            </h3>
-            <button
-              @click="closeForm"
-              class="text-gray-600 hover:text-gray-800 transition duration-300"
-            >
-              <svg
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-          <EventForm
-            :event="editingEvent || {}"
-            :isEdit="formMode === 'edit'"
-            @submit="
-              formMode === 'edit' ? handleUpdate($event) : handleCreate($event)
-            "
-            @cancel="closeForm"
-          />
-        </div>
-      </div>
     </div>
+
+    <EventForm
+      :event="editingEvent || {}"
+      :isEdit="formMode === 'edit'"
+      :isOpen="formMode !== 'closed'"
+      @submit="
+        formMode === 'edit' ? handleUpdate($event) : handleCreate($event)
+      "
+      @cancel="closeForm"
+    />
 
     <div v-if="isLoading" class="text-center py-4">Cargando anuncios...</div>
 
