@@ -63,10 +63,14 @@ const imageOptions = [
   { value: "custom", label: "Imagen personalizada" },
 ];
 
-// Set initial image option based on existing image
+// Modify the watch to update all form data
 watch(
   () => props.event,
   (newEvent) => {
+    // Update all form data fields
+    formData.value = { ...newEvent };
+
+    // Handle image selection
     if (newEvent.image) {
       const predefinedImage = imageOptions.find(
         (option) => option.url === newEvent.image
@@ -78,13 +82,12 @@ watch(
         customImageUrl.value = newEvent.image;
       }
     } else {
-      // Default to the predefined default image
       selectedImageOption.value = "default";
       formData.value.image = defaultImageUrl;
       customImageUrl.value = "";
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 );
 
 // Update formData.image when selection changes
